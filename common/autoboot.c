@@ -211,8 +211,13 @@ static int menukey;
 static int __abortboot(int bootdelay)
 {
 	int abort = 0;
+	int detectkey = 0;
 	unsigned long ts;
 
+	if (bootdelay == 2)
+	{
+		detectkey = 1; 
+	}
 #ifdef CONFIG_MENUPROMPT
 	printf(CONFIG_MENUPROMPT);
 #else
@@ -250,6 +255,26 @@ static int __abortboot(int bootdelay)
 	}
 
 	putc('\n');
+	
+	if (detectkey)
+	{
+		for (int retry = 0; retry < 3; retry++)
+		{
+			gpio_request(10, "cmd_gpio");
+		        gpio_direction_input(10);
+		        if (0 == gpio_get_value(10)) {
+		                 return 1;
+		        }
+
+		        if (2 == retry) {
+		            putc(' ');
+		        }
+		        else {
+			    putc('#');
+		        }
+		        udelay(10000);
+		}
+	}
 
 	return abort;
 }

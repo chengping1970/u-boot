@@ -439,11 +439,11 @@ extern int soft_i2c_gpio_scl;
 #define BOOT_TARGET_DEVICES(func) \
 	func(FEL, fel, na) \
 	BOOT_TARGET_DEVICES_MMC(func) \
-	BOOT_TARGET_DEVICES_MMC_EXTRA(func) \
+	/*BOOT_TARGET_DEVICES_MMC_EXTRA(func) \
 	BOOT_TARGET_DEVICES_SCSI(func) \
 	BOOT_TARGET_DEVICES_USB(func) \
 	func(PXE, pxe, na) \
-	func(DHCP, dhcp, na)
+	func(DHCP, dhcp, na)*/
 
 #ifdef CONFIG_OLD_SUNXI_KERNEL_COMPAT
 #define BOOTCMD_SUNXI_COMPAT \
@@ -460,6 +460,14 @@ extern int soft_i2c_gpio_scl;
 #else
 #define BOOTCMD_SUNXI_COMPAT
 #endif
+
+#define BOOTCMD_SPI \
+	"distro_bootcmd=" \
+		"sf probe 0:0 6000000 &&" \
+		"sf read 46000000 100000 500000 &&" \
+		"sf read 49000000 e0000 20000 &&" \
+		"env set fdt_high ffffffff &&" \
+		"bootm 0x46000000 - 0x49000000\0"
 
 #include <config_distro_bootcmd.h>
 
@@ -493,7 +501,8 @@ extern int soft_i2c_gpio_scl;
 	"fdtfile=" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
 	"console=ttyS0,115200\0" \
 	BOOTCMD_SUNXI_COMPAT \
-	BOOTENV
+	BOOTCMD_SPI
+	/*BOOTENV*/
 
 #else /* ifndef CONFIG_SPL_BUILD */
 #define CONFIG_EXTRA_ENV_SETTINGS

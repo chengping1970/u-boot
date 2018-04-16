@@ -52,8 +52,8 @@
 #include <dt-bindings/pinctrl/sun4i-a10.h>
 
 / {
-	model = "Xunlong Orange Pi Zero";
-	compatible = "xunlong,orangepi-zero", "allwinner,sun8i-h2-plus";
+	model = "vidtoo h2 plus model A";
+	compatible = "vidtoo,h2_plus_model_A", "allwinner,sun8i-h2-plus";
 
 	aliases {
 		serial0 = &uart0;
