@@ -52,13 +52,21 @@
 #include <dt-bindings/pinctrl/sun4i-a10.h>
 
 / {
-	model = "vidtoo h2 plus model A";
-	compatible = "vidtoo,h2_plus_model_A", "allwinner,sun8i-h2-plus";
+	model = "vidtoo h2 plus all";
+	compatible = "vidtoo,h2_plus_model_all", "allwinner,sun8i-h2-plus";
+
+	reg_vcc_usb_eth: reg-vcc-usb-ethernet {
+		compatible = "regulator-fixed";
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+		regulator-name = "vcc-usb-ethernet";
+		enable-active-high;
+		gpio = <&pio 0 20 GPIO_ACTIVE_HIGH>;
+	};
 
 	aliases {
 		serial0 = &uart0;
 		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
-		ethernet1 = &xr819;
 		spi0 = &spi0;
 	};
 
@@ -80,20 +88,6 @@
 			gpios = <&pio 0 17 GPIO_ACTIVE_HIGH>;
 		};
 	};
-
-	reg_vcc_wifi: reg_vcc_wifi {
-		compatible = "regulator-fixed";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		regulator-name = "vcc-wifi";
-		enable-active-high;
-		gpio = <&pio 0 20 GPIO_ACTIVE_HIGH>;
-	};
-
-	wifi_pwrseq: wifi_pwrseq {
-		compatible = "mmc-pwrseq-simple";
-		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>;
-	};
 };
 
 &pio {
@@ -110,6 +104,14 @@
 };
 
 &ehci1 {
+	status = "okay";
+};
+
+&ehci2 {
+	status = "okay";
+};
+
+&ehci3 {
 	status = "okay";
 };
 
@@ -134,25 +136,15 @@
 	status = "okay";
 };
 
-&mmc1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&mmc1_pins_a>;
-	vmmc-supply = <&reg_vcc_wifi>;
-	mmc-pwrseq = <&wifi_pwrseq>;
-	bus-width = <4>;
-	non-removable;
+&ohci1 {
 	status = "okay";
-
-	/*
-	 * Explicitly define the sdio device, so that we can add an ethernet
-	 * alias for it (which e.g. makes u-boot set a mac-address).
-	 */
-	xr819: sdio_wifi@1 {
-		reg = <1>;
-	};
 };
 
-&ohci1 {
+&ohci2 {
+	status = "okay";
+};
+
+&ohci3 {
 	status = "okay";
 };
 
@@ -163,6 +155,5 @@
 };
 
 &usbphy {
-	/* USB VBUS is always on */
-	status = "okay";
+	usb1_vbus-supply = <&reg_vcc_usb_eth>;
 };
