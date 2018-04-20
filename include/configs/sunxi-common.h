@@ -464,10 +464,10 @@ extern int soft_i2c_gpio_scl;
 #define BOOTCMD_SPI \
 	"distro_bootcmd=" \
 		"sf probe 0:0 6000000 &&" \
-		"sf read 46000000 100000 500000 &&" \
-		"sf read 49000000 e0000 20000 &&" \
+		"sf read 42000000 100000 500000 &&" \
+		"sf read 43000000 e0000 20000 &&" \
 		"env set fdt_high ffffffff &&" \
-		"bootm 0x46000000 - 0x49000000\0"
+		"bootm 0x42000000 - 0x43000000\0"
 
 #include <config_distro_bootcmd.h>
 
