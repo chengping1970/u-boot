@@ -221,7 +221,7 @@ static int __abortboot(int bootdelay)
 #ifdef CONFIG_MENUPROMPT
 	printf(CONFIG_MENUPROMPT);
 #else
-	printf("Hit any key to stop autoboot: %2d ", bootdelay);
+	printf("Press any key to stop autoboot: %2d ", bootdelay);
 #endif
 
 	/*
@@ -260,12 +260,18 @@ static int __abortboot(int bootdelay)
 	{
 		for (int retry = 0; retry < 3; retry++)
 		{
-			gpio_request(10, "cmd_gpio");
-		        gpio_direction_input(10);
-		        if (0 == gpio_get_value(10)) {
+			gpio_request(7, "cmd_gpio");
+			gpio_direction_input(7);
+			if (0 == gpio_get_value(7)) {
 		                 return 1;
 		        }
-
+			
+			gpio_request(10, "cmd_gpio");		        
+		        gpio_direction_input(10);
+			if (0 == gpio_get_value(10)) {
+		                 return 1;
+		        }
+		        
 		        if (2 == retry) {
 		            putc(' ');
 		        }
